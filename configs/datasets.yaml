@@ -1,0 +1,76 @@
+# Exact benchmark dataset specifications aligned with Chapter 3, Table 3.4
+datasets:
+  PeMS03:
+    num_nodes: 358
+    num_edges: 547
+    num_timesteps: 26208
+    raw_features: 1
+    target_channel: 0
+    target_name: "traffic_flow"
+    unit: "veh/5min"
+    interval_minutes: 5
+    splits: [0.6, 0.2, 0.2]
+    history_len: 12
+    horizon_len: 12
+    default_node_emb_dim: 12
+    raw_files: ["PEMS03.npz", "PEMS03.csv"]
+
+  PeMS04:
+    num_nodes: 307
+    num_edges: 340
+    num_timesteps: 16992
+    raw_features: 3
+    target_channel: 0
+    target_name: "traffic_flow"
+    unit: "veh/5min"
+    interval_minutes: 5
+    splits: [0.6, 0.2, 0.2]
+    history_len: 12
+    horizon_len: 12
+    default_node_emb_dim: 12
+    raw_files: ["PEMS04.npz", "PEMS04.csv"]
+
+  PeMS08:
+    num_nodes: 170
+    num_edges: 295
+    num_timesteps: 17856
+    raw_features: 3
+    target_channel: 0
+    target_name: "traffic_flow"
+    unit: "veh/5min"
+    interval_minutes: 5
+    splits: [0.6, 0.2, 0.2]
+    history_len: 12
+    horizon_len: 12
+    default_node_emb_dim: 8
+    raw_files: ["PEMS08.npz", "PEMS08.csv"]
+
+  METR-LA:
+    num_nodes: 207
+    num_edges: 1515
+    num_timesteps: 34272
+    raw_features: 1
+    target_channel: 0
+    target_name: "space_mean_speed"
+    unit: "mph"
+    interval_minutes: 5
+    splits: [0.7, 0.1, 0.2]
+    history_len: 12
+    horizon_len: 12
+    default_node_emb_dim: 10
+    raw_files: ["metr-la.h5", "adj_mx.pkl"]
+
+  PEMS-BAY:
+    num_nodes: 325
+    num_edges: 2369
+    num_timesteps: 52116
+    raw_features: 1
+    target_channel: 0
+    target_name: "space_mean_speed"
+    unit: "mph"
+    interval_minutes: 5
+    splits: [0.7, 0.1, 0.2]
+    history_len: 12
+    horizon_len: 12
+    default_node_emb_dim: 12
+    raw_files: ["pems-bay.h5", "adj_mx_bay.pkl"]
