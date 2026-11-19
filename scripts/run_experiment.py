@@ -4,6 +4,10 @@ Example:
   python3 scripts/run_experiment.py --dataset PeMS08 --model Bayesian-DGCRAN --data_root /kaggle/input/pems-metr-traffic-benchmarks
 """
 from __future__ import annotations
+import os as _os, sys as _sys
+_REPO_ROOT = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+if _REPO_ROOT not in _sys.path:
+    _sys.path.insert(0, _REPO_ROOT)
 import argparse, os, time
 import numpy as np
 import torch

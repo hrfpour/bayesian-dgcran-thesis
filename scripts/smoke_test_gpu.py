@@ -2,6 +2,10 @@
 10-Second End-to-End PyTorch Smoke Test for Kaggle GPU.
 Verifies forward, backward, KL loss, and batched MC inference on ALL 14 models before launching long runs!
 """
+import os as _os, sys as _sys
+_REPO_ROOT = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+if _REPO_ROOT not in _sys.path:
+    _sys.path.insert(0, _REPO_ROOT)
 import numpy as np
 import torch
 from src.models.baselines import build_model

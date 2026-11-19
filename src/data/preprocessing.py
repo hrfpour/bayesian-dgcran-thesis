@@ -152,19 +152,40 @@ def inject_missing_and_noise(
 
 
 def build_gaussian_adjacency(edge_csv_path: str, num_nodes: int, sigma: Optional[float] = None, kappa: float = 0.1) -> np.ndarray:
-    """Builds thresholded Gaussian kernel static adjacency matrix (Chapter 1 Eq. 1.1)."""
-    import csv
-    dist = np.full((num_nodes, num_nodes), np.inf, dtype=np.float64)
-    np.fill_diagonal(dist, 0.0)
+    """Builds thresholded Gaussian kernel static adjacency matrix (Chapter 1 Eq. 1.1).
+    Automatically handles PeMS03 raw Caltrans sensor IDs via sibling .txt mapping file if present.
+    """
+    import csv, os
+    id_map = None
+    txt_candidate = os.path.splitext(edge_csv_path)[0] + ".txt"
+    if os.path.exists(txt_candidate):
+        with open(txt_candidate, "r", encoding="utf-8") as tf:
+            ids = [int(line.strip()) for line in tf if line.strip()]
+        if len(ids) == num_nodes:
+            id_map = {sid: idx for idx, sid in enumerate(ids)}
+
+    rows = []
     with open(edge_csv_path, "r", encoding="utf-8") as f:
         reader = csv.reader(f)
-        header = next(reader, None)
+        next(reader, None)
         for row in reader:
             if len(row) < 3:
                 continue
-            u, v, d = int(float(row[0])), int(float(row[1])), float(row[2])
-            if 0 <= u < num_nodes and 0 <= v < num_nodes:
-                dist[u, v] = d
+            rows.append((int(float(row[0])), int(float(row[1])), float(row[2])))
+
+    if id_map is None and rows and max(max(u, v) for u, v, _ in rows) >= num_nodes:
+        uniq = sorted({u for u, _, _ in rows} | {v for _, v, _ in rows})
+        id_map = {sid: idx for idx, sid in enumerate(uniq[:num_nodes])}
+
+    dist = np.full((num_nodes, num_nodes), np.inf, dtype=np.float64)
+    np.fill_diagonal(dist, 0.0)
+    for u, v, d in rows:
+        if id_map is not None:
+            if u in id_map and v in id_map:
+                dist[id_map[u], id_map[v]] = d
+        elif 0 <= u < num_nodes and 0 <= v < num_nodes:
+            dist[u, v] = d
+
     finite = dist[np.isfinite(dist) & (dist > 0)]
     if sigma is None:
         sigma = float(np.std(finite)) if len(finite) > 0 else 1.0
