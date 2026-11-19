@@ -32,7 +32,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from src.models.bayesian_dgcran import BayesianDGCRAN
-from src.models.bayesian_layers import BDAGM, BDGCRUCell, HSTDecoder
+from src.models.bayesian_layers import BDAGMModule, BDGCRUCell, HSTDecoder
 
 
 # ------------------------------------------------------------------------------
@@ -498,7 +498,10 @@ class DGCRNBaseline(nn.Module):
         self.hidden_dim = hidden_dim
         self.E_G = nn.Parameter(torch.empty(num_nodes, node_emb_dim))
         nn.init.xavier_uniform_(self.E_G)
-        self.dyn_graph = BDAGM(num_nodes, in_features, hidden_dim, node_emb_dim, use_concrete_mask=False)
+        self.dyn_graph = BDAGMModule(
+            num_nodes=num_nodes, in_feat_dim=in_features, cal_dim=4,
+            hidden_dim=hidden_dim, emb_dim=node_emb_dim, use_bdagm=False,
+        )
         self.cell = BDGCRUCell(node_emb_dim, in_features, hidden_dim, use_vnapl=False)
         self.head = nn.Linear(hidden_dim, horizon_len)
 
@@ -508,8 +511,10 @@ class DGCRNBaseline(nn.Module):
     def forward(self, X: torch.Tensor, T_cal: torch.Tensor, sample: bool = False):
         B, T, N, _ = X.shape
         H = torch.zeros(B, N, self.hidden_dim, device=X.device, dtype=X.dtype)
+        I_N = torch.eye(N, device=X.device, dtype=X.dtype)
         for t in range(T):
-            A_dyn = self.dyn_graph(X[:, t], H, T_cal[:, t], sample=False)
+            T_t = T_cal[:, t].unsqueeze(1).expand(-1, N, -1)  # (B, N, 4)
+            A_dyn = self.dyn_graph(X[:, t], T_t, H, I_N, sample=False)
             H = self.cell(X[:, t], H, A_dyn, self.E_G, sample=False)
         return self.head(H).transpose(1, 2), None
 
