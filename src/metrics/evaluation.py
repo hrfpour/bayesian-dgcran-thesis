@@ -21,7 +21,13 @@ def compute_point_metrics(y_true: np.ndarray, y_pred: np.ndarray, mape_eps: floa
     rmse = float(np.sqrt(np.mean(err ** 2)))
     mask = np.abs(y_true) >= mape_eps
     mape = float(np.mean(np.abs(err[mask] / y_true[mask])) * 100.0) if np.any(mask) else float("nan")
-    return {"MAE": mae, "RMSE": rmse, "MAPE": mape}
+    denom_s = np.abs(y_true) + np.abs(y_pred)
+    smask = denom_s >= mape_eps
+    smape = float(np.mean(2.0 * np.abs(err[smask]) / denom_s[smask]) * 100.0) if np.any(smask) else float("nan")
+    ss_res = float(np.sum(err ** 2))
+    ss_tot = float(np.sum((y_true - np.mean(y_true)) ** 2))
+    r2 = float(1.0 - ss_res / max(ss_tot, 1e-8))
+    return {"MAE": mae, "RMSE": rmse, "MAPE": mape, "SMAPE": smape, "R2": r2}
 
 
 def compute_interval_metrics(

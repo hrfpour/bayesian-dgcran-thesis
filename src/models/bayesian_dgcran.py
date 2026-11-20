@@ -64,9 +64,9 @@ class BayesianDGCRAN(nn.Module):
         )
 
         # Parallel Branch 1 (Dynamic): BDGCRU
-        self.bdgcru = BDGCRUCell(node_emb_dim, in_features, hidden_dim, use_vnapl=use_vnapl, prior_sigma=prior_sigma)
+        self.bdgcru = BDGCRUCell(node_emb_dim, in_features + cal_features, hidden_dim, use_vnapl=use_vnapl, prior_sigma=prior_sigma)
         # Parallel Branch 2 (Static-Adaptive): B-AGCRU (Section 3.4.4)
-        self.bagcru = BDGCRUCell(node_emb_dim, in_features, hidden_dim, use_vnapl=use_vnapl, prior_sigma=prior_sigma)
+        self.bagcru = BDGCRUCell(node_emb_dim, in_features + cal_features, hidden_dim, use_vnapl=use_vnapl, prior_sigma=prior_sigma)
 
         # Innovation 4: Cross-Attention Fusion & Dual-Head Heteroscedastic Decoder
         self.cross_attn = MultiHeadSpatialCrossAttention(hidden_dim, num_heads=num_heads)
@@ -105,10 +105,12 @@ class BayesianDGCRAN(nn.Module):
             X_t = X[:, t]  # (B, N, F)
             T_t = T_cal[:, t].unsqueeze(1).expand(B, N, -1)  # (B, N, 4)
             A_t = self.bdagm(X_t, T_t, H_dyn, A_adp, sample=sample)
-            H_dyn = self.bdgcru(X_t, H_dyn, A_t, self.E_G, z_x=z_x, z_h=z_h, sample=sample)
-            H_adp = self.bagcru(X_t, H_adp, A_static_adp, self.E_G, z_x=z_x, z_h=z_h, sample=sample)
+            X_in = (X_t * z_x) if (z_x is not None and sample) else X_t
+            X_cat = torch.cat([X_in, T_t], dim=-1)
+            H_dyn = self.bdgcru(X_cat, H_dyn, A_t, self.E_G, z_x=None, z_h=z_h, sample=sample)
+            H_adp = self.bagcru(X_cat, H_adp, A_static_adp, self.E_G, z_x=None, z_h=z_h, sample=sample)
 
-        H_fus = self.cross_attn(H_dyn, H_adp)
+        H_fus = self.cross_attn(H_dyn, H_adp) + 0.5 * (H_dyn + H_adp)
         return self.decoder(H_fus)
 
     @torch.no_grad()

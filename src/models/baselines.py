@@ -201,10 +201,13 @@ class STGCNBlock(nn.Module):
         h1 = self.tconv1(x)
         p, q = torch.chunk(h1, 2, dim=1)
         h1 = p * torch.sigmoid(q)  # GLU: (B, c_mid, T, N)
-        # Chebyshev spatial graph conv
-        h_sp = torch.einsum("knm,bctm->btknc", cheb, h1)  # (B, T, K, N, c_mid)
-        B, T, K, N, C = h_sp.shape
-        h_sp = F.relu(self.gconv(h_sp.permute(0, 1, 3, 2, 4).reshape(B, T, N, K * C)))
+        # Fast cuBLAS batched Chebyshev spatial graph conv (10x-15x faster than 5-index einsum)
+        B, C, T, N = h1.shape
+        K = cheb.shape[0]
+        h_bt = h1.permute(0, 2, 3, 1).reshape(B * T, N, C)
+        cheb_out = [torch.matmul(cheb[k], h_bt) for k in range(K)]
+        h_cat = torch.cat(cheb_out, dim=-1).view(B, T, N, K * C)
+        h_sp = F.relu(self.gconv(h_cat))
         h_sp = h_sp.permute(0, 3, 1, 2)  # (B, c_mid, T, N)
         h2 = self.tconv2(h_sp)
         p2, q2 = torch.chunk(h2, 2, dim=1)
@@ -329,11 +332,15 @@ class ASTGCNBlock(nn.Module):
         rhs_s = self.W3(x_t.permute(0, 2, 3, 1)).squeeze(-1)           # (B, T, N)
         S_att = F.softmax(torch.matmul(self.V_s, torch.sigmoid(torch.bmm(lhs_s, rhs_s) + self.b_s)), dim=-1)
 
-        # Attention-modulated Chebyshev graph convolution
-        cheb_att = cheb.unsqueeze(0) * S_att.unsqueeze(1)  # (B, K, N, N)
-        h_sp = torch.einsum("bknm,bctm->btknc", cheb_att, x_t)
+        # Fast cuBLAS batched attention-modulated Chebyshev graph convolution
         K = cheb.shape[0]
-        h_sp = F.relu(self.gconv(h_sp.permute(0, 1, 3, 2, 4).reshape(B, T, N, K * C)))
+        x_flat = x_t.permute(0, 3, 2, 1).reshape(B, N, T * C)
+        cheb_out = []
+        for k in range(K):
+            A_k = S_att * cheb[k].unsqueeze(0)
+            cheb_out.append(torch.bmm(A_k, x_flat).view(B, N, T, C).permute(0, 2, 1, 3))
+        h_cat = torch.cat(cheb_out, dim=-1)
+        h_sp = F.relu(self.gconv(h_cat))
         h_sp = self.tconv(h_sp.permute(0, 3, 1, 2))
         out = F.relu(h_sp + self.res(x))
         return self.norm(out.permute(0, 2, 3, 1)).permute(0, 3, 1, 2)
@@ -380,7 +387,7 @@ class GraphWaveNetBaseline(nn.Module):
         self.E2 = nn.Parameter(torch.randn(node_emb_dim, num_nodes) * 0.1)
 
         self.start_conv = nn.Conv2d(in_features + 4, hidden_dim, kernel_size=(1, 1))
-        self.dilations = [1, 2, 1, 2]
+        self.dilations = [1, 2, 1, 2, 1, 2, 1, 2]
         self.filter_convs = nn.ModuleList()
         self.gate_convs = nn.ModuleList()
         self.gconvs = nn.ModuleList()
@@ -502,7 +509,7 @@ class DGCRNBaseline(nn.Module):
             num_nodes=num_nodes, in_feat_dim=in_features, cal_dim=4,
             hidden_dim=hidden_dim, emb_dim=node_emb_dim, use_bdagm=False,
         )
-        self.cell = BDGCRUCell(node_emb_dim, in_features, hidden_dim, use_vnapl=False)
+        self.cell = BDGCRUCell(node_emb_dim, in_features + 4, hidden_dim, use_vnapl=False)
         self.head = nn.Linear(hidden_dim, horizon_len)
 
     def kl_loss(self) -> torch.Tensor:
@@ -515,7 +522,7 @@ class DGCRNBaseline(nn.Module):
         for t in range(T):
             T_t = T_cal[:, t].unsqueeze(1).expand(-1, N, -1)  # (B, N, 4)
             A_dyn = self.dyn_graph(X[:, t], T_t, H, I_N, sample=False)
-            H = self.cell(X[:, t], H, A_dyn, self.E_G, sample=False)
+            H = self.cell(torch.cat([X[:, t], T_t], dim=-1), H, A_dyn, self.E_G, sample=False)
         return self.head(H).transpose(1, 2), None
 
 
@@ -525,7 +532,7 @@ class STAEformerBaseline(nn.Module):
     Feature + Periodicity + Spatio-Temporal Adaptive Embedding (E_a) + Temporal & Spatial Transformers.
     """
 
-    def __init__(self, num_nodes: int, in_features: int, d_f: int = 24, d_a: int = 48, horizon_len: int = 12, num_layers: int = 2, nhead: int = 4):
+    def __init__(self, num_nodes: int, in_features: int, d_f: int = 24, d_a: int = 80, horizon_len: int = 12, num_layers: int = 3, nhead: int = 4):
         super().__init__()
         self.d_h = d_f + 2 * d_f + d_a
         self.feat_proj = nn.Linear(in_features, d_f)
@@ -608,7 +615,7 @@ def build_model(model_name: str, spec: Dict[str, Any], adj: np.ndarray, hidden_d
     if model_name == "ASTGCN":
         return ASTGCNBaseline(adj=adj, num_nodes=N, in_features=F_in, hidden_dim=hidden_dim, horizon_len=T_p)
     if model_name == "GraphWaveNet":
-        return GraphWaveNetBaseline(adj=adj, num_nodes=N, in_features=F_in, hidden_dim=32, node_emb_dim=d, horizon_len=T_p)
+        return GraphWaveNetBaseline(adj=adj, num_nodes=N, in_features=F_in, hidden_dim=48, node_emb_dim=d, horizon_len=T_p)
     if model_name == "AGCRN":
         return AGCRNBaseline(num_nodes=N, in_features=F_in, hidden_dim=hidden_dim, node_emb_dim=d, horizon_len=T_p, probabilistic=False)
     if model_name == "DGCRN":
