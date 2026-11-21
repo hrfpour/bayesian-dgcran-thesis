@@ -184,7 +184,7 @@ class BDAGMModule(nn.Module):
 
         gamma_dyn = torch.sigmoid(self.raw_gamma_dyn)
         eye = torch.eye(N, device=X_t.device, dtype=X_t.dtype).unsqueeze(0)
-        return eye + A_adp.unsqueeze(0) + gamma_dyn * DA_eff
+        return eye + (1.0 - gamma_dyn) * A_adp.unsqueeze(0) + gamma_dyn * DA_eff
 
 
 class BDGCRUCell(nn.Module):
