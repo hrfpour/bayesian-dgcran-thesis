@@ -532,7 +532,7 @@ class STAEformerBaseline(nn.Module):
     Feature + Periodicity + Spatio-Temporal Adaptive Embedding (E_a) + Temporal & Spatial Transformers.
     """
 
-    def __init__(self, num_nodes: int, in_features: int, d_f: int = 24, d_a: int = 80, horizon_len: int = 12, num_layers: int = 3, nhead: int = 4):
+    def __init__(self, num_nodes: int, in_features: int, d_f: int = 24, d_a: int = 64, horizon_len: int = 12, num_layers: int = 2, nhead: int = 4):
         super().__init__()
         self.d_h = d_f + 2 * d_f + d_a
         self.feat_proj = nn.Linear(in_features, d_f)

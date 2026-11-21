@@ -232,35 +232,43 @@ class BDGCRUCell(nn.Module):
 
 
 class MultiHeadSpatialCrossAttention(nn.Module):
-    """Multi-Head Spatial Cross-Attention fusing H_dyn (Query) with H_adp (Key, Value) — Eqs. (3.39)-(3.40)."""
+    """
+    Multi-Head Spatial Cross-Attention fusing H_dyn (Query) with H_adp (Key, Value) — Eqs. (3.39)-(3.40).
+    Uses Pre-LayerNorm + learnable residual gate (gamma_attn init=0.1) so per-sensor flow magnitude
+    and local node identity are strictly preserved while adding global cross-branch context.
+    """
 
     def __init__(self, hidden_dim: int, num_heads: int = 4):
         super().__init__()
         assert hidden_dim % num_heads == 0
         self.num_heads = num_heads
         self.d_k = hidden_dim // num_heads
+        self.norm_q = nn.LayerNorm(hidden_dim)
+        self.norm_kv = nn.LayerNorm(hidden_dim)
         self.W_Q = nn.Linear(hidden_dim, hidden_dim, bias=False)
         self.W_K = nn.Linear(hidden_dim, hidden_dim, bias=False)
         self.W_V = nn.Linear(hidden_dim, hidden_dim, bias=False)
         self.W_O = nn.Linear(hidden_dim, hidden_dim, bias=False)
-        self.norm = nn.LayerNorm(hidden_dim)
+        self.gamma_attn = nn.Parameter(torch.tensor(0.1))
 
     def forward(self, H_dyn: torch.Tensor, H_adp: torch.Tensor) -> torch.Tensor:
         B, N, D = H_dyn.shape
-        Q = self.W_Q(H_dyn).view(B, N, self.num_heads, self.d_k).transpose(1, 2)
-        K = self.W_K(H_adp).view(B, N, self.num_heads, self.d_k).transpose(1, 2)
-        V = self.W_V(H_adp).view(B, N, self.num_heads, self.d_k).transpose(1, 2)
+        q_in = self.norm_q(H_dyn)
+        kv_in = self.norm_kv(H_adp)
+        Q = self.W_Q(q_in).view(B, N, self.num_heads, self.d_k).transpose(1, 2)
+        K = self.W_K(kv_in).view(B, N, self.num_heads, self.d_k).transpose(1, 2)
+        V = self.W_V(kv_in).view(B, N, self.num_heads, self.d_k).transpose(1, 2)
         scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.d_k)
         attn = F.softmax(scores, dim=-1)
         out = torch.matmul(attn, V).transpose(1, 2).contiguous().view(B, N, D)
-        return self.norm(H_dyn + self.W_O(out))
+        return H_dyn + self.gamma_attn * self.W_O(out)
 
 
 class HSTDecoder(nn.Module):
     """
     Innovation 4: Heteroscedastic Spatio-Temporal Probabilistic Decoder (Eqs. 3.41-3.42).
-    Direct multi-horizon projection with right-multiplication + transpose -> (B, T', N)
-    and smooth numerical clamping [s_min, s_max] on log-aleatoric variance.
+    Uses direct linear residual skip + SiLU nonlinear refinement (no ReLU clipping of negative Z-score
+    nighttime traffic states) and smooth clamping [s_min, s_max] on log-aleatoric variance.
     """
 
     def __init__(
@@ -274,11 +282,11 @@ class HSTDecoder(nn.Module):
         super().__init__()
         self.s_min = s_min
         self.s_max = s_max
-        self.mu_head = nn.Sequential(nn.Linear(hidden_dim, dec_dim), nn.ReLU(), nn.Linear(dec_dim, horizon_len))
+        self.mu_skip = nn.Linear(hidden_dim, horizon_len)
+        self.mu_mlp = nn.Sequential(nn.Linear(hidden_dim, dec_dim), nn.SiLU(), nn.Linear(dec_dim, horizon_len))
         self.logvar_head = nn.Sequential(nn.Linear(hidden_dim, dec_dim), nn.ELU(), nn.Linear(dec_dim, horizon_len))
 
     def forward(self, H_fus: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        # H_fus: (B, N, d_h) -> heads output (B, N, T') -> transpose to (B, T', N)
-        mu = self.mu_head(H_fus).transpose(1, 2)
+        mu = (self.mu_skip(H_fus) + self.mu_mlp(H_fus)).transpose(1, 2)
         logvar = torch.clamp(self.logvar_head(H_fus).transpose(1, 2), min=self.s_min, max=self.s_max)
         return mu, logvar

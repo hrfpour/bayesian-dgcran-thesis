@@ -70,7 +70,7 @@ class BayesianDGCRAN(nn.Module):
 
         # Innovation 4: Cross-Attention Fusion & Dual-Head Heteroscedastic Decoder
         self.cross_attn = MultiHeadSpatialCrossAttention(hidden_dim, num_heads=num_heads)
-        self.decoder = HSTDecoder(hidden_dim, horizon_len=horizon_len, dec_dim=hidden_dim)
+        self.decoder = HSTDecoder(2 * hidden_dim, horizon_len=horizon_len, dec_dim=hidden_dim)
 
     def _sample_time_invariant_masks(self, B: int, device: torch.device, dtype: torch.dtype):
         if not self.use_var_rnn_masks:
@@ -110,7 +110,8 @@ class BayesianDGCRAN(nn.Module):
             H_dyn = self.bdgcru(X_cat, H_dyn, A_t, self.E_G, z_x=None, z_h=z_h, sample=sample)
             H_adp = self.bagcru(X_cat, H_adp, A_static_adp, self.E_G, z_x=None, z_h=z_h, sample=sample)
 
-        H_fus = self.cross_attn(H_dyn, H_adp) + 0.5 * (H_dyn + H_adp)
+        H_cross = self.cross_attn(H_dyn, H_adp)
+        H_fus = torch.cat([H_cross, H_adp], dim=-1)
         return self.decoder(H_fus)
 
     @torch.no_grad()

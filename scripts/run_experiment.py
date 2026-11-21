@@ -93,6 +93,7 @@ def main():
     p.add_argument("--warmup_epochs", type=int, default=20)
     p.add_argument("--awa_epochs", type=int, default=20)
     p.add_argument("--patience", type=int, default=15)
+    p.add_argument("--lr", type=float, default=None)
     p.add_argument("--hidden_dim", type=int, default=64)
     p.add_argument("--num_mc", type=int, default=10)
     p.add_argument("--seed", type=int, default=42)
@@ -147,6 +148,7 @@ def main():
     use_kl_awa = (args.model not in ("Ablation-NoKLAWA",)) and (not is_det)
     use_nemhcc = args.model not in ("Ablation-NoNEMHCC",)
 
+    lr_max = args.lr if args.lr is not None else (1e-3 if args.model == "STAEformer" else 3e-3)
     t0 = time.time()
     history = {}
     if args.model == "DeepEnsembles":
@@ -162,7 +164,7 @@ def main():
     else:
         model, history = train_single_model(
             model, loaders, device,
-            epochs_pre=args.epochs, epochs_warmup=args.warmup_epochs, epochs_awa=args.awa_epochs,
+            epochs_pre=args.epochs, epochs_warmup=args.warmup_epochs, epochs_awa=args.awa_epochs, lr_max=lr_max,
             use_amp=spec["use_amp"], deterministic_mae_only=is_det, use_kl_awa=use_kl_awa, patience=args.patience,
         )
     train_sec = round(time.time() - t0, 2)
