@@ -1,0 +1,907 @@
+{
+  "dataset": "PeMS08",
+  "models": [
+    "AGCRN",
+    "ASTGCN",
+    "DCRNN",
+    "DGCRAN",
+    "DGCRN",
+    "FC-LSTM",
+    "GraphWaveNet",
+    "HA",
+    "SARIMA",
+    "STAEformer",
+    "STGCN",
+    "VAR"
+  ],
+  "matrix": {
+    "AGCRN": {
+      "AGCRN": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "ASTGCN": {
+        "dm_stat": -10.4003,
+        "hln_stat": -10.3666,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DCRNN": {
+        "dm_stat": -2.7715,
+        "hln_stat": -2.7626,
+        "p_value": 0.002882,
+        "significant_05": true
+      },
+      "DGCRAN": {
+        "dm_stat": 10.5953,
+        "hln_stat": 10.5609,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRN": {
+        "dm_stat": 5.8707,
+        "hln_stat": 5.8517,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "FC-LSTM": {
+        "dm_stat": -10.012,
+        "hln_stat": -9.9796,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "GraphWaveNet": {
+        "dm_stat": -3.1432,
+        "hln_stat": -3.133,
+        "p_value": 0.000872,
+        "significant_05": true
+      },
+      "HA": {
+        "dm_stat": -16.8834,
+        "hln_stat": -16.8287,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "SARIMA": {
+        "dm_stat": -8.813,
+        "hln_stat": -8.7845,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "STAEformer": {
+        "dm_stat": 18.4874,
+        "hln_stat": 18.4275,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": -7.3261,
+        "hln_stat": -7.3024,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "VAR": {
+        "dm_stat": -22.3717,
+        "hln_stat": -22.2992,
+        "p_value": 0.0,
+        "significant_05": true
+      }
+    },
+    "ASTGCN": {
+      "AGCRN": {
+        "dm_stat": 10.4003,
+        "hln_stat": 10.3666,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "ASTGCN": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DCRNN": {
+        "dm_stat": 12.2142,
+        "hln_stat": 12.1746,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRAN": {
+        "dm_stat": 11.5935,
+        "hln_stat": 11.5559,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRN": {
+        "dm_stat": 10.2293,
+        "hln_stat": 10.1962,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "FC-LSTM": {
+        "dm_stat": 8.9985,
+        "hln_stat": 8.9694,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "GraphWaveNet": {
+        "dm_stat": 12.0595,
+        "hln_stat": 12.0204,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "HA": {
+        "dm_stat": -16.7653,
+        "hln_stat": -16.711,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "SARIMA": {
+        "dm_stat": -1.8189,
+        "hln_stat": -1.813,
+        "p_value": 0.034956,
+        "significant_05": true
+      },
+      "STAEformer": {
+        "dm_stat": 12.9229,
+        "hln_stat": 12.881,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": 12.122,
+        "hln_stat": 12.0827,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "VAR": {
+        "dm_stat": -23.3019,
+        "hln_stat": -23.2264,
+        "p_value": 0.0,
+        "significant_05": true
+      }
+    },
+    "DCRNN": {
+      "AGCRN": {
+        "dm_stat": 2.7715,
+        "hln_stat": 2.7626,
+        "p_value": 0.997118,
+        "significant_05": false
+      },
+      "ASTGCN": {
+        "dm_stat": -12.2142,
+        "hln_stat": -12.1746,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DCRNN": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRAN": {
+        "dm_stat": 8.6249,
+        "hln_stat": 8.597,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRN": {
+        "dm_stat": 5.0232,
+        "hln_stat": 5.0069,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "FC-LSTM": {
+        "dm_stat": -12.3475,
+        "hln_stat": -12.3074,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "GraphWaveNet": {
+        "dm_stat": -1.2147,
+        "hln_stat": -1.2108,
+        "p_value": 0.113026,
+        "significant_05": false
+      },
+      "HA": {
+        "dm_stat": -17.2513,
+        "hln_stat": -17.1954,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "SARIMA": {
+        "dm_stat": -8.3535,
+        "hln_stat": -8.3265,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "STAEformer": {
+        "dm_stat": 13.237,
+        "hln_stat": 13.1941,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": -10.7114,
+        "hln_stat": -10.6767,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "VAR": {
+        "dm_stat": -24.157,
+        "hln_stat": -24.0788,
+        "p_value": 0.0,
+        "significant_05": true
+      }
+    },
+    "DGCRAN": {
+      "AGCRN": {
+        "dm_stat": -10.5953,
+        "hln_stat": -10.5609,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "ASTGCN": {
+        "dm_stat": -11.5935,
+        "hln_stat": -11.5559,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DCRNN": {
+        "dm_stat": -8.6249,
+        "hln_stat": -8.597,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DGCRAN": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRN": {
+        "dm_stat": -8.3011,
+        "hln_stat": -8.2742,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "FC-LSTM": {
+        "dm_stat": -11.4971,
+        "hln_stat": -11.4598,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "GraphWaveNet": {
+        "dm_stat": -8.5221,
+        "hln_stat": -8.4944,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "HA": {
+        "dm_stat": -17.1503,
+        "hln_stat": -17.0947,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "SARIMA": {
+        "dm_stat": -10.53,
+        "hln_stat": -10.4959,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "STAEformer": {
+        "dm_stat": 11.2658,
+        "hln_stat": 11.2293,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": -10.3386,
+        "hln_stat": -10.3051,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "VAR": {
+        "dm_stat": -22.6284,
+        "hln_stat": -22.555,
+        "p_value": 0.0,
+        "significant_05": true
+      }
+    },
+    "DGCRN": {
+      "AGCRN": {
+        "dm_stat": -5.8707,
+        "hln_stat": -5.8517,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "ASTGCN": {
+        "dm_stat": -10.2293,
+        "hln_stat": -10.1962,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DCRNN": {
+        "dm_stat": -5.0232,
+        "hln_stat": -5.0069,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DGCRAN": {
+        "dm_stat": 8.3011,
+        "hln_stat": 8.2742,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRN": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "FC-LSTM": {
+        "dm_stat": -9.883,
+        "hln_stat": -9.851,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "GraphWaveNet": {
+        "dm_stat": -5.154,
+        "hln_stat": -5.1373,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "HA": {
+        "dm_stat": -16.8719,
+        "hln_stat": -16.8172,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "SARIMA": {
+        "dm_stat": -9.4864,
+        "hln_stat": -9.4557,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "STAEformer": {
+        "dm_stat": 21.1079,
+        "hln_stat": 21.0395,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": -7.8834,
+        "hln_stat": -7.8578,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "VAR": {
+        "dm_stat": -21.8918,
+        "hln_stat": -21.8208,
+        "p_value": 0.0,
+        "significant_05": true
+      }
+    },
+    "FC-LSTM": {
+      "AGCRN": {
+        "dm_stat": 10.012,
+        "hln_stat": 9.9796,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "ASTGCN": {
+        "dm_stat": -8.9985,
+        "hln_stat": -8.9694,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DCRNN": {
+        "dm_stat": 12.3475,
+        "hln_stat": 12.3074,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRAN": {
+        "dm_stat": 11.4971,
+        "hln_stat": 11.4598,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRN": {
+        "dm_stat": 9.883,
+        "hln_stat": 9.851,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "FC-LSTM": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "GraphWaveNet": {
+        "dm_stat": 12.3291,
+        "hln_stat": 12.2891,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "HA": {
+        "dm_stat": -16.7537,
+        "hln_stat": -16.6994,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "SARIMA": {
+        "dm_stat": -3.4222,
+        "hln_stat": -3.4111,
+        "p_value": 0.000327,
+        "significant_05": true
+      },
+      "STAEformer": {
+        "dm_stat": 13.2197,
+        "hln_stat": 13.1768,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": 12.4089,
+        "hln_stat": 12.3687,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "VAR": {
+        "dm_stat": -23.334,
+        "hln_stat": -23.2584,
+        "p_value": 0.0,
+        "significant_05": true
+      }
+    },
+    "GraphWaveNet": {
+      "AGCRN": {
+        "dm_stat": 3.1432,
+        "hln_stat": 3.133,
+        "p_value": 0.999128,
+        "significant_05": false
+      },
+      "ASTGCN": {
+        "dm_stat": -12.0595,
+        "hln_stat": -12.0204,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DCRNN": {
+        "dm_stat": 1.2147,
+        "hln_stat": 1.2108,
+        "p_value": 0.886974,
+        "significant_05": false
+      },
+      "DGCRAN": {
+        "dm_stat": 8.5221,
+        "hln_stat": 8.4944,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRN": {
+        "dm_stat": 5.154,
+        "hln_stat": 5.1373,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "FC-LSTM": {
+        "dm_stat": -12.3291,
+        "hln_stat": -12.2891,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "GraphWaveNet": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "HA": {
+        "dm_stat": -17.1437,
+        "hln_stat": -17.0882,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "SARIMA": {
+        "dm_stat": -8.1793,
+        "hln_stat": -8.1528,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "STAEformer": {
+        "dm_stat": 13.0013,
+        "hln_stat": 12.9592,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": -10.1697,
+        "hln_stat": -10.1367,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "VAR": {
+        "dm_stat": -23.8586,
+        "hln_stat": -23.7813,
+        "p_value": 0.0,
+        "significant_05": true
+      }
+    },
+    "HA": {
+      "AGCRN": {
+        "dm_stat": 16.8834,
+        "hln_stat": 16.8287,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "ASTGCN": {
+        "dm_stat": 16.7653,
+        "hln_stat": 16.711,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DCRNN": {
+        "dm_stat": 17.2513,
+        "hln_stat": 17.1954,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRAN": {
+        "dm_stat": 17.1503,
+        "hln_stat": 17.0947,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRN": {
+        "dm_stat": 16.8719,
+        "hln_stat": 16.8172,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "FC-LSTM": {
+        "dm_stat": 16.7537,
+        "hln_stat": 16.6994,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "GraphWaveNet": {
+        "dm_stat": 17.1437,
+        "hln_stat": 17.0882,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "HA": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "SARIMA": {
+        "dm_stat": 14.1546,
+        "hln_stat": 14.1087,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STAEformer": {
+        "dm_stat": 17.4223,
+        "hln_stat": 17.3658,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": 17.1012,
+        "hln_stat": 17.0458,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "VAR": {
+        "dm_stat": 13.1576,
+        "hln_stat": 13.1149,
+        "p_value": 1.0,
+        "significant_05": false
+      }
+    },
+    "SARIMA": {
+      "AGCRN": {
+        "dm_stat": 8.813,
+        "hln_stat": 8.7845,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "ASTGCN": {
+        "dm_stat": 1.8189,
+        "hln_stat": 1.813,
+        "p_value": 0.965044,
+        "significant_05": false
+      },
+      "DCRNN": {
+        "dm_stat": 8.3535,
+        "hln_stat": 8.3265,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRAN": {
+        "dm_stat": 10.53,
+        "hln_stat": 10.4959,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRN": {
+        "dm_stat": 9.4864,
+        "hln_stat": 9.4557,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "FC-LSTM": {
+        "dm_stat": 3.4222,
+        "hln_stat": 3.4111,
+        "p_value": 0.999673,
+        "significant_05": false
+      },
+      "GraphWaveNet": {
+        "dm_stat": 8.1793,
+        "hln_stat": 8.1528,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "HA": {
+        "dm_stat": -14.1546,
+        "hln_stat": -14.1087,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "SARIMA": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STAEformer": {
+        "dm_stat": 11.7404,
+        "hln_stat": 11.7023,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": 6.3443,
+        "hln_stat": 6.3237,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "VAR": {
+        "dm_stat": -10.5515,
+        "hln_stat": -10.5173,
+        "p_value": 0.0,
+        "significant_05": true
+      }
+    },
+    "STAEformer": {
+      "AGCRN": {
+        "dm_stat": -18.4874,
+        "hln_stat": -18.4275,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "ASTGCN": {
+        "dm_stat": -12.9229,
+        "hln_stat": -12.881,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DCRNN": {
+        "dm_stat": -13.237,
+        "hln_stat": -13.1941,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DGCRAN": {
+        "dm_stat": -11.2658,
+        "hln_stat": -11.2293,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DGCRN": {
+        "dm_stat": -21.1079,
+        "hln_stat": -21.0395,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "FC-LSTM": {
+        "dm_stat": -13.2197,
+        "hln_stat": -13.1768,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "GraphWaveNet": {
+        "dm_stat": -13.0013,
+        "hln_stat": -12.9592,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "HA": {
+        "dm_stat": -17.4223,
+        "hln_stat": -17.3658,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "SARIMA": {
+        "dm_stat": -11.7404,
+        "hln_stat": -11.7023,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "STAEformer": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": -13.0672,
+        "hln_stat": -13.0249,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "VAR": {
+        "dm_stat": -23.4955,
+        "hln_stat": -23.4194,
+        "p_value": 0.0,
+        "significant_05": true
+      }
+    },
+    "STGCN": {
+      "AGCRN": {
+        "dm_stat": 7.3261,
+        "hln_stat": 7.3024,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "ASTGCN": {
+        "dm_stat": -12.122,
+        "hln_stat": -12.0827,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "DCRNN": {
+        "dm_stat": 10.7114,
+        "hln_stat": 10.6767,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRAN": {
+        "dm_stat": 10.3386,
+        "hln_stat": 10.3051,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRN": {
+        "dm_stat": 7.8834,
+        "hln_stat": 7.8578,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "FC-LSTM": {
+        "dm_stat": -12.4089,
+        "hln_stat": -12.3687,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "GraphWaveNet": {
+        "dm_stat": 10.1697,
+        "hln_stat": 10.1367,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "HA": {
+        "dm_stat": -17.1012,
+        "hln_stat": -17.0458,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "SARIMA": {
+        "dm_stat": -6.3443,
+        "hln_stat": -6.3237,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "STAEformer": {
+        "dm_stat": 13.0672,
+        "hln_stat": 13.0249,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "VAR": {
+        "dm_stat": -24.1841,
+        "hln_stat": -24.1057,
+        "p_value": 0.0,
+        "significant_05": true
+      }
+    },
+    "VAR": {
+      "AGCRN": {
+        "dm_stat": 22.3717,
+        "hln_stat": 22.2992,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "ASTGCN": {
+        "dm_stat": 23.3019,
+        "hln_stat": 23.2264,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DCRNN": {
+        "dm_stat": 24.157,
+        "hln_stat": 24.0788,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRAN": {
+        "dm_stat": 22.6284,
+        "hln_stat": 22.555,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "DGCRN": {
+        "dm_stat": 21.8918,
+        "hln_stat": 21.8208,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "FC-LSTM": {
+        "dm_stat": 23.334,
+        "hln_stat": 23.2584,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "GraphWaveNet": {
+        "dm_stat": 23.8586,
+        "hln_stat": 23.7813,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "HA": {
+        "dm_stat": -13.1576,
+        "hln_stat": -13.1149,
+        "p_value": 0.0,
+        "significant_05": true
+      },
+      "SARIMA": {
+        "dm_stat": 10.5515,
+        "hln_stat": 10.5173,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STAEformer": {
+        "dm_stat": 23.4955,
+        "hln_stat": 23.4194,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "STGCN": {
+        "dm_stat": 24.1841,
+        "hln_stat": 24.1057,
+        "p_value": 1.0,
+        "significant_05": false
+      },
+      "VAR": {
+        "dm_stat": 0.0,
+        "hln_stat": 0.0,
+        "p_value": 1.0,
+        "significant_05": false
+      }
+    }
+  }
+}

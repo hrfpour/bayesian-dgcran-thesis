@@ -1,0 +1,134 @@
+[
+  {
+    "dataset": "PeMS08",
+    "model": "AGCRN",
+    "ours_mae": 15.498658487892865,
+    "paper_mae": 15.32,
+    "diff_mae_pct": 1.17,
+    "ours_rmse": 24.64680889913298,
+    "paper_rmse": 24.41,
+    "ours_mape": 9.55871905814495,
+    "paper_source": "Liu et al., 2023 (STAEformer Table 3)"
+  },
+  {
+    "dataset": "PeMS08",
+    "model": "ASTGCN",
+    "ours_mae": 17.352536032066745,
+    "paper_mae": 18.25,
+    "diff_mae_pct": -4.92,
+    "ours_rmse": 28.135177712991922,
+    "paper_rmse": 28.06,
+    "ours_mape": 10.603882335492283,
+    "paper_source": "Li et al., 2025 (DGCRAN Table 2)"
+  },
+  {
+    "dataset": "PeMS08",
+    "model": "DCRNN",
+    "ours_mae": 15.660445157130237,
+    "paper_mae": 15.22,
+    "diff_mae_pct": 2.89,
+    "ours_rmse": 25.238850820501533,
+    "paper_rmse": 24.17,
+    "ours_mape": 9.726456390794914,
+    "paper_source": "Liu et al., 2023 (STAEformer Table 3)"
+  },
+  {
+    "dataset": "PeMS08",
+    "model": "DGCRAN",
+    "ours_mae": 15.029815069454715,
+    "paper_mae": 13.53,
+    "diff_mae_pct": 11.09,
+    "ours_rmse": 24.293659380188483,
+    "paper_rmse": 23.23,
+    "ours_mape": 9.432939155686219,
+    "paper_source": "Li et al., 2025 (DGCRAN Table 2)"
+  },
+  {
+    "dataset": "PeMS08",
+    "model": "DGCRN",
+    "ours_mae": 15.28540506329819,
+    "paper_mae": 15.95,
+    "diff_mae_pct": -4.17,
+    "ours_rmse": 24.43761883287102,
+    "paper_rmse": 25.22,
+    "ours_mape": 9.48312223407886,
+    "paper_source": "Li et al., 2025 (DGCRAN Table 3)"
+  },
+  {
+    "dataset": "PeMS08",
+    "model": "FC-LSTM",
+    "ours_mae": 16.90148844812981,
+    "paper_mae": null,
+    "diff_mae_pct": null,
+    "ours_rmse": 27.39030522177683,
+    "paper_rmse": null,
+    "ours_mape": 10.332037405917509,
+    "paper_source": "\u2014"
+  },
+  {
+    "dataset": "PeMS08",
+    "model": "GraphWaveNet",
+    "ours_mae": 15.691504991422695,
+    "paper_mae": 14.4,
+    "diff_mae_pct": 8.97,
+    "ours_rmse": 25.4796537195185,
+    "paper_rmse": 23.39,
+    "ours_mape": 9.607120653021068,
+    "paper_source": "Liu et al., 2023 (STAEformer Table 3)"
+  },
+  {
+    "dataset": "PeMS08",
+    "model": "HA",
+    "ours_mae": 31.978859778459064,
+    "paper_mae": 34.86,
+    "diff_mae_pct": -8.26,
+    "ours_rmse": 47.49265472991809,
+    "paper_rmse": 59.24,
+    "ours_mape": 19.71183220602276,
+    "paper_source": "Li et al., 2025 (DGCRAN Table 2)"
+  },
+  {
+    "dataset": "PeMS08",
+    "model": "SARIMA",
+    "ours_mae": 17.921834827417502,
+    "paper_mae": null,
+    "diff_mae_pct": null,
+    "ours_rmse": 27.83768767471049,
+    "paper_rmse": null,
+    "ours_mape": 11.484678430013568,
+    "paper_source": "\u2014"
+  },
+  {
+    "dataset": "PeMS08",
+    "model": "STAEformer",
+    "ours_mae": 14.666395316502507,
+    "paper_mae": 13.46,
+    "diff_mae_pct": 8.96,
+    "ours_rmse": 23.67083702513024,
+    "paper_rmse": 23.25,
+    "ours_mape": 8.95116874525335,
+    "paper_source": "Liu et al., 2023 (STAEformer Table 3)"
+  },
+  {
+    "dataset": "PeMS08",
+    "model": "STGCN",
+    "ours_mae": 16.154204534017193,
+    "paper_mae": 16.08,
+    "diff_mae_pct": 0.46,
+    "ours_rmse": 26.31143712980027,
+    "paper_rmse": 25.39,
+    "ours_mape": 9.891955901632754,
+    "paper_source": "Liu et al., 2023 (STAEformer Table 3)"
+  },
+  {
+    "dataset": "PeMS08",
+    "model": "VAR",
+    "ours_mae": 22.390098839303914,
+    "paper_mae": 19.19,
+    "diff_mae_pct": 16.68,
+    "ours_rmse": 34.23075836840953,
+    "paper_rmse": 29.81,
+    "ours_mape": 14.25150139960851,
+    "paper_source": "Li et al., 2025 (DGCRAN Table 2)"
+  }
+]
