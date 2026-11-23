@@ -1,0 +1,134 @@
+[
+  {
+    "dataset": "METR-LA",
+    "model": "AGCRN",
+    "ours_mae": 3.224790319959669,
+    "paper_mae": 3.59,
+    "diff_mae_pct": -10.17,
+    "ours_rmse": 6.453972956316367,
+    "paper_rmse": 7.45,
+    "ours_mape": 9.197690994961826,
+    "paper_source": "Liu et al., 2023 (STAEformer Table 1)"
+  },
+  {
+    "dataset": "METR-LA",
+    "model": "ASTGCN",
+    "ours_mae": 3.7337139286514494,
+    "paper_mae": null,
+    "diff_mae_pct": null,
+    "ours_rmse": 7.401310495854053,
+    "paper_rmse": null,
+    "ours_mape": 10.739228545024831,
+    "paper_source": "\u2014"
+  },
+  {
+    "dataset": "METR-LA",
+    "model": "DCRNN",
+    "ours_mae": 3.3532119574127335,
+    "paper_mae": 3.54,
+    "diff_mae_pct": -5.28,
+    "ours_rmse": 6.632791732646453,
+    "paper_rmse": 7.47,
+    "ours_mape": 9.72192849838563,
+    "paper_source": "Liu et al., 2023 (STAEformer Table 1)"
+  },
+  {
+    "dataset": "METR-LA",
+    "model": "DGCRAN",
+    "ours_mae": 3.2538193229236363,
+    "paper_mae": null,
+    "diff_mae_pct": null,
+    "ours_rmse": 6.624624407917363,
+    "paper_rmse": null,
+    "ours_mape": 9.388150149654,
+    "paper_source": "\u2014"
+  },
+  {
+    "dataset": "METR-LA",
+    "model": "DGCRN",
+    "ours_mae": 3.1936259817571697,
+    "paper_mae": null,
+    "diff_mae_pct": null,
+    "ours_rmse": 6.5172573058908,
+    "paper_rmse": null,
+    "ours_mape": 9.26444216266295,
+    "paper_source": "\u2014"
+  },
+  {
+    "dataset": "METR-LA",
+    "model": "FC-LSTM",
+    "ours_mae": 3.636722811705479,
+    "paper_mae": null,
+    "diff_mae_pct": null,
+    "ours_rmse": 7.317857771921241,
+    "paper_rmse": null,
+    "ours_mape": 10.565635719627094,
+    "paper_source": "\u2014"
+  },
+  {
+    "dataset": "METR-LA",
+    "model": "GraphWaveNet",
+    "ours_mae": 3.269701112356683,
+    "paper_mae": 3.51,
+    "diff_mae_pct": -6.85,
+    "ours_rmse": 6.483953824096265,
+    "paper_rmse": 7.28,
+    "ours_mape": 9.181547575289855,
+    "paper_source": "Liu et al., 2023 (STAEformer Table 1)"
+  },
+  {
+    "dataset": "METR-LA",
+    "model": "HA",
+    "ours_mae": 5.9623844007922715,
+    "paper_mae": null,
+    "diff_mae_pct": null,
+    "ours_rmse": 12.0837004087281,
+    "paper_rmse": null,
+    "ours_mape": 14.825476886392764,
+    "paper_source": "\u2014"
+  },
+  {
+    "dataset": "METR-LA",
+    "model": "SARIMA",
+    "ours_mae": 4.840203187661328,
+    "paper_mae": null,
+    "diff_mae_pct": null,
+    "ours_rmse": 9.217878366215283,
+    "paper_rmse": null,
+    "ours_mape": 11.758693491791918,
+    "paper_source": "\u2014"
+  },
+  {
+    "dataset": "METR-LA",
+    "model": "STAEformer",
+    "ours_mae": 3.096387068598822,
+    "paper_mae": 3.34,
+    "diff_mae_pct": -7.29,
+    "ours_rmse": 6.33725592705486,
+    "paper_rmse": 7.02,
+    "ours_mape": 8.766410858116263,
+    "paper_source": "Liu et al., 2023 (STAEformer Table 1)"
+  },
+  {
+    "dataset": "METR-LA",
+    "model": "STGCN",
+    "ours_mae": 3.4997847251103984,
+    "paper_mae": 3.6,
+    "diff_mae_pct": -2.78,
+    "ours_rmse": 7.0356582277991055,
+    "paper_rmse": 7.43,
+    "ours_mape": 10.20503189233273,
+    "paper_source": "Liu et al., 2023 (STAEformer Table 1)"
+  },
+  {
+    "dataset": "METR-LA",
+    "model": "VAR",
+    "ours_mae": 5.058165243539662,
+    "paper_mae": null,
+    "diff_mae_pct": null,
+    "ours_rmse": 9.747218944455648,
+    "paper_rmse": null,
+    "ours_mape": 12.782509176746135,
+    "paper_source": "\u2014"
+  }
+]
