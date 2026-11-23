@@ -7,6 +7,7 @@ datasets:
     raw_features: 1
     target_channel: 0
     target_name: "traffic_flow"
+    mask_zero_target: false
     unit: "veh/5min"
     interval_minutes: 5
     splits: [0.6, 0.2, 0.2]
@@ -24,6 +25,7 @@ datasets:
     raw_features: 3
     target_channel: 0
     target_name: "traffic_flow"
+    mask_zero_target: false
     unit: "veh/5min"
     interval_minutes: 5
     splits: [0.6, 0.2, 0.2]
@@ -41,6 +43,7 @@ datasets:
     raw_features: 1
     target_channel: 0
     target_name: "traffic_flow"
+    mask_zero_target: false
     unit: "veh/5min"
     interval_minutes: 5
     splits: [0.6, 0.2, 0.2]
@@ -58,6 +61,7 @@ datasets:
     raw_features: 3
     target_channel: 0
     target_name: "traffic_flow"
+    mask_zero_target: false
     unit: "veh/5min"
     interval_minutes: 5
     splits: [0.6, 0.2, 0.2]
@@ -75,6 +79,7 @@ datasets:
     raw_features: 1
     target_channel: 0
     target_name: "space_mean_speed"
+    mask_zero_target: true
     unit: "mph"
     interval_minutes: 5
     splits: [0.7, 0.1, 0.2]
@@ -92,6 +97,7 @@ datasets:
     raw_features: 1
     target_channel: 0
     target_name: "space_mean_speed"
+    mask_zero_target: true
     unit: "mph"
     interval_minutes: 5
     splits: [0.7, 0.1, 0.2]

@@ -103,6 +103,7 @@ class BayesianDGCRAN(nn.Module):
         ])
 
         # Innovation 4: Gated Pre-LN Spatial Cross-Attention & Dual-Head Heteroscedastic Decoder
+        self.inter_drop = nn.Dropout(0.1)
         self.cross_attn = MultiHeadSpatialCrossAttention(hidden_dim, num_heads=num_heads)
         self.decoder = HSTDecoder(
             2 * hidden_dim + node_id_dim + tod_emb_dim + dow_emb_dim,
@@ -175,8 +176,8 @@ class BayesianDGCRAN(nn.Module):
                     h_a_new = h_a_new + inp_adp
                 H_dyn_list[l] = h_d_new
                 H_adp_list[l] = h_a_new
-                inp_dyn = h_d_new
-                inp_adp = h_a_new
+                inp_dyn = self.inter_drop(h_d_new) if l == 0 else h_d_new
+                inp_adp = self.inter_drop(h_a_new) if l == 0 else h_a_new
 
         H_dyn_final = H_dyn_list[-1]
         H_adp_final = H_adp_list[-1]

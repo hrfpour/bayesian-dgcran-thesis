@@ -31,19 +31,25 @@ def set_seed(seed: int) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
-def _compute_horizon_breakdown(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
+def _compute_horizon_breakdown(y_true: np.ndarray, y_pred: np.ndarray, mask_zero_target: bool = False) -> dict:
     horizons = {}
     for h_idx in range(y_true.shape[1]):
-        horizons[f"h{h_idx + 1}"] = compute_point_metrics(y_true[:, h_idx : h_idx + 1, :], y_pred[:, h_idx : h_idx + 1, :])
+        horizons[f"h{h_idx + 1}"] = compute_point_metrics(y_true[:, h_idx : h_idx + 1, :], y_pred[:, h_idx : h_idx + 1, :], mask_zero_target=mask_zero_target)
     return horizons
 
 
 def _export_spatial_and_trajectories(output_dir: str, dataset: str, tag: str, y_true: np.ndarray, mu: np.ndarray,
-                                     var_alea: np.ndarray | None = None, var_epis: np.ndarray | None = None) -> None:
+                                     var_alea: np.ndarray | None = None, var_epis: np.ndarray | None = None, mask_zero_target: bool = False) -> None:
     os.makedirs(output_dir, exist_ok=True)
     err = y_true - mu
-    sensor_mae = np.mean(np.abs(err), axis=(0, 1))
-    sensor_rmse = np.sqrt(np.mean(err ** 2, axis=(0, 1)))
+    if mask_zero_target:
+        vm = (np.abs(y_true) > 1e-4).astype(np.float64)
+        denom_n = np.maximum(vm.sum(axis=(0, 1)), 1.0)
+        sensor_mae = np.sum(np.abs(err) * vm, axis=(0, 1)) / denom_n
+        sensor_rmse = np.sqrt(np.sum((err ** 2) * vm, axis=(0, 1)) / denom_n)
+    else:
+        sensor_mae = np.mean(np.abs(err), axis=(0, 1))
+        sensor_rmse = np.sqrt(np.mean(err ** 2, axis=(0, 1)))
     spatial_payload = {
         "dataset": dataset,
         "model": tag,
@@ -79,7 +85,11 @@ def _export_spatial_and_trajectories(output_dir: str, dataset: str, tag: str, y_
     with open(os.path.join(output_dir, f"traj_{dataset}_{tag}.json"), "w", encoding="utf-8") as f:
         json.dump(traj_payload, f)
 
-    mae_per_sample = np.mean(np.abs(err), axis=(1, 2)).astype(np.float32)
+    if mask_zero_target:
+        vm = (np.abs(y_true) > 1e-4).astype(np.float64)
+        mae_per_sample = (np.sum(np.abs(err) * vm, axis=(1, 2)) / np.maximum(vm.sum(axis=(1, 2)), 1.0)).astype(np.float32)
+    else:
+        mae_per_sample = np.mean(np.abs(err), axis=(1, 2)).astype(np.float32)
     np.save(os.path.join(output_dir, f"dm_err_{dataset}_{tag}.npy"), mae_per_sample)
 
 
@@ -107,6 +117,8 @@ def main():
     spec = splits["spec"]
     scaler = splits["scaler"]
     ch = spec["target_channel"]
+    mask_zero = bool(spec.get("mask_zero_target", False))
+    null_norm_val = float((0.0 - scaler.mean[ch]) / (scaler.std[ch] + 1e-8)) if mask_zero else None
 
     if args.missing_rate > 0.0 or args.noise_std > 0.0:
         splits["test"]["X"] = inject_missing_and_noise(
@@ -128,15 +140,15 @@ def main():
             pred_norm = sar_m.predict(splits["test"]["X"], splits["test"]["T_cal"], ch)
         pred_phys = scaler.inverse_mean(pred_norm, ch)
         metrics = {
-            "overall": compute_point_metrics(y_te_phys, pred_phys),
-            "horizons": _compute_horizon_breakdown(y_te_phys, pred_phys),
+            "overall": compute_point_metrics(y_te_phys, pred_phys, mask_zero_target=mask_zero),
+            "horizons": _compute_horizon_breakdown(y_te_phys, pred_phys, mask_zero_target=mask_zero),
         }
         hp = dict(vars(args))
         hp["train_seconds"] = round(time.time() - t0, 2)
         hp["num_parameters"] = 0
         hp["inference_ms_per_batch"] = 0.1
         out_json = save_experiment_result(args.output_dir, args.dataset, args.model, metrics, hp, seed=args.seed)
-        _export_spatial_and_trajectories(args.output_dir, args.dataset, args.model, y_te_phys, pred_phys)
+        _export_spatial_and_trajectories(args.output_dir, args.dataset, args.model, y_te_phys, pred_phys, mask_zero_target=mask_zero)
         print(f"[{args.dataset} | {args.model}] Done in {hp['train_seconds']}s -> {out_json}")
         print("  Overall:", metrics["overall"])
         return
@@ -156,7 +168,7 @@ def main():
             set_seed(args.seed + idx * 101)
             _, hist_m = train_single_model(
                 member, loaders, device, args.epochs, 0, 0,
-                use_amp=spec["use_amp"], deterministic_mae_only=False, use_kl_awa=False, patience=args.patience
+                use_amp=spec["use_amp"], deterministic_mae_only=False, use_kl_awa=False, patience=args.patience, null_norm_val=null_norm_val
             )
             if idx == 0:
                 history = hist_m
@@ -165,7 +177,7 @@ def main():
         model, history = train_single_model(
             model, loaders, device,
             epochs_pre=args.epochs, epochs_warmup=args.warmup_epochs, epochs_awa=args.awa_epochs, lr_max=lr_max,
-            use_amp=spec["use_amp"], deterministic_mae_only=is_det, use_kl_awa=use_kl_awa, patience=args.patience,
+            use_amp=spec["use_amp"], deterministic_mae_only=is_det, use_kl_awa=use_kl_awa, patience=args.patience, null_norm_val=null_norm_val,
         )
     train_sec = round(time.time() - t0, 2)
 
@@ -174,14 +186,14 @@ def main():
 
     if is_det:
         metrics = {
-            "overall": compute_point_metrics(test_out["y_true"], test_out["mu"]),
-            "horizons": _compute_horizon_breakdown(test_out["y_true"], test_out["mu"]),
+            "overall": compute_point_metrics(test_out["y_true"], test_out["mu"], mask_zero_target=mask_zero),
+            "horizons": _compute_horizon_breakdown(test_out["y_true"], test_out["mu"], mask_zero_target=mask_zero),
             "learning_curve": history,
         }
     else:
         rho_cal = 1.0 if args.model == "DeepSTUQ" else 0.995
         metrics = evaluate_probabilistic_with_calibration(val_out, test_out, use_nemhcc=use_nemhcc, rho_cal=rho_cal)
-        metrics["horizons"] = _compute_horizon_breakdown(test_out["y_true"], test_out["mu"])
+        metrics["horizons"] = _compute_horizon_breakdown(test_out["y_true"], test_out["mu"], mask_zero_target=mask_zero)
         metrics["learning_curve"] = history
 
     hp = dict(vars(args))
@@ -192,7 +204,7 @@ def main():
     out_json = save_experiment_result(args.output_dir, args.dataset, tag, metrics, hp, seed=args.seed)
     _export_spatial_and_trajectories(
         args.output_dir, args.dataset, tag, test_out["y_true"], test_out["mu"],
-        test_out.get("var_alea"), test_out.get("var_epis")
+        test_out.get("var_alea"), test_out.get("var_epis"), mask_zero_target=mask_zero
     )
 
     print(f"[{args.dataset} | {tag}] Finished in {train_sec}s (ep={history.get('epochs_run')}, best={history.get('best_epoch')}, params={hp['num_parameters']:,}, inf={hp['inference_ms_per_batch']}ms) -> {out_json}")

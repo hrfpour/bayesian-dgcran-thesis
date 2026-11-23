@@ -11,21 +11,28 @@ import numpy as np
 from scipy.stats import norm
 
 
-def compute_point_metrics(y_true: np.ndarray, y_pred: np.ndarray, mape_eps: float = 1.0) -> Dict[str, float]:
+def compute_point_metrics(y_true: np.ndarray, y_pred: np.ndarray, mape_eps: float = 1.0, mask_zero_target: bool = False) -> Dict[str, float]:
     """
     y_true, y_pred: shape (M_test, T', N) in physical scale.
     Uses standard PeMS masking (|y_true| >= mape_eps) for MAPE to avoid division by zero.
     """
-    err = y_true - y_pred
-    mae = float(np.mean(np.abs(err)))
-    rmse = float(np.sqrt(np.mean(err ** 2)))
-    mask = np.abs(y_true) >= mape_eps
-    mape = float(np.mean(np.abs(err[mask] / y_true[mask])) * 100.0) if np.any(mask) else float("nan")
-    denom_s = np.abs(y_true) + np.abs(y_pred)
+    if mask_zero_target:
+        valid = np.abs(y_true) > 1e-4
+        yt = y_true[valid]
+        yp = y_pred[valid]
+    else:
+        yt = y_true
+        yp = y_pred
+    err = yt - yp
+    mae = float(np.mean(np.abs(err))) if yt.size > 0 else float("nan")
+    rmse = float(np.sqrt(np.mean(err ** 2))) if yt.size > 0 else float("nan")
+    mask = np.abs(yt) >= mape_eps
+    mape = float(np.mean(np.abs(err[mask] / yt[mask])) * 100.0) if np.any(mask) else float("nan")
+    denom_s = np.abs(yt) + np.abs(yp)
     smask = denom_s >= mape_eps
     smape = float(np.mean(2.0 * np.abs(err[smask]) / denom_s[smask]) * 100.0) if np.any(smask) else float("nan")
     ss_res = float(np.sum(err ** 2))
-    ss_tot = float(np.sum((y_true - np.mean(y_true)) ** 2))
+    ss_tot = float(np.sum((yt - np.mean(yt)) ** 2)) if yt.size > 0 else 1.0
     r2 = float(1.0 - ss_res / max(ss_tot, 1e-8))
     return {"MAE": mae, "RMSE": rmse, "MAPE": mape, "SMAPE": smape, "R2": r2}
 

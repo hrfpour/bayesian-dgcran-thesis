@@ -33,11 +33,20 @@ def compute_loss(
     num_train_obs: int,
     lambda_reg: float = 0.2,
     deterministic_mae_only: bool = False,
+    null_norm_val: Optional[float] = None,
 ) -> torch.Tensor:
-    mae = torch.mean(torch.abs(y - mu))
-    if deterministic_mae_only or (logvar is None):
-        return mae
-    gnll = 0.5 * torch.mean(torch.exp(-logvar) * (y - mu).pow(2) + logvar)
+    if null_norm_val is not None:
+        mask = (torch.abs(y - null_norm_val) > 1e-4).to(mu.dtype)
+        denom = torch.clamp(mask.sum(), min=1.0)
+        mae = torch.sum(torch.abs(y - mu) * mask) / denom
+        if deterministic_mae_only or (logvar is None):
+            return mae
+        gnll = 0.5 * torch.sum((torch.exp(-logvar) * (y - mu).pow(2) + logvar) * mask) / denom
+    else:
+        mae = torch.mean(torch.abs(y - mu))
+        if deterministic_mae_only or (logvar is None):
+            return mae
+        gnll = 0.5 * torch.mean(torch.exp(-logvar) * (y - mu).pow(2) + logvar)
     kl_term = (beta_kl / max(1, num_train_obs)) * kl
     return gnll + lambda_reg * mae + kl_term
 
@@ -67,6 +76,7 @@ def train_single_model(
     deterministic_mae_only: bool = False,
     use_kl_awa: bool = True,
     patience: int = 15,
+    null_norm_val: Optional[float] = None,
 ) -> Tuple[nn.Module, Dict[str, Any]]:
     model = model.to(device)
     amp_on = bool(use_amp and device.type == "cuda")
@@ -95,7 +105,7 @@ def train_single_model(
             optimizer.zero_grad(set_to_none=True)
             with torch.amp.autocast("cuda", enabled=amp_on):
                 mu, logvar = model(X_b, T_b, sample=True)
-                loss = compute_loss(mu, logvar, Y_b, model.kl_loss(), beta, num_train_obs, lambda_reg, deterministic_mae_only)
+                loss = compute_loss(mu, logvar, Y_b, model.kl_loss(), beta, num_train_obs, lambda_reg, deterministic_mae_only, null_norm_val)
             grad_scaler.scale(loss).backward()
             grad_scaler.unscale_(optimizer)
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
@@ -111,7 +121,7 @@ def train_single_model(
                 X_b, T_b, Y_b = X_b.to(device, non_blocking=True), T_b.to(device, non_blocking=True), Y_b.to(device, non_blocking=True)
                 with torch.amp.autocast("cuda", enabled=amp_on):
                     mu, logvar = model(X_b, T_b, sample=False)
-                    vl = compute_loss(mu, logvar, Y_b, model.kl_loss(), beta, num_train_obs, lambda_reg, deterministic_mae_only)
+                    vl = compute_loss(mu, logvar, Y_b, model.kl_loss(), beta, num_train_obs, lambda_reg, deterministic_mae_only, null_norm_val)
                 val_losses.append(float(vl))
 
         mean_tr = float(np.mean(tr_losses))
@@ -152,7 +162,7 @@ def train_single_model(
                 optimizer.zero_grad(set_to_none=True)
                 with torch.amp.autocast("cuda", enabled=amp_on):
                     mu, logvar = model(X_b, T_b, sample=True)
-                    loss = compute_loss(mu, logvar, Y_b, model.kl_loss(), beta_max, num_train_obs, lambda_reg, False)
+                    loss = compute_loss(mu, logvar, Y_b, model.kl_loss(), beta_max, num_train_obs, lambda_reg, False, null_norm_val)
                 grad_scaler.scale(loss).backward()
                 grad_scaler.unscale_(optimizer)
                 torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
